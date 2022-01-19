@@ -5,11 +5,11 @@ namespace AspCrud.Repositories
     public interface IRepository<T>
     {
         IEnumerable<T> Get();
-        T? Get(int index);
+        T? Get(int id);
         bool Add(T entity);
         bool Update(T entity);
         bool Delete(T entity);
-        bool Delete(int index);
+        bool Delete(int id);
         
     }
 }

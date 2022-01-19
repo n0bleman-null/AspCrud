@@ -13,7 +13,7 @@ namespace AspCrud.Repositories
             _cryptoStorage.Add(new Crypto { Id = 3, Name = "USDT", Price = 1, IsToken = false});
             _cryptoStorage.Add(new Crypto { Id = 5, Name = "NFT", Price = 5, IsToken = true});
         }
-        private List<Crypto> _cryptoStorage = new List<Crypto>();
+        public List<Crypto> _cryptoStorage = new List<Crypto>();
 
         public bool Add(Crypto entity)
         {
@@ -28,9 +28,9 @@ namespace AspCrud.Repositories
             return _cryptoStorage.OrderBy(s => s.Name);
         }
 
-        public Crypto? Get(int index)
+        public Crypto? Get(int id)
         {
-            return _cryptoStorage.FirstOrDefault(s => s.Id == index);
+            return _cryptoStorage.FirstOrDefault(s => s.Id == id);
         }
 
         public bool Update(Crypto entity)
@@ -53,9 +53,9 @@ namespace AspCrud.Repositories
             return true;
         }
 
-        public bool Delete(int index)
+        public bool Delete(int id)
         {
-            var entity = _cryptoStorage.Find(s => s.Id == index);
+            var entity = _cryptoStorage.Find(s => s.Id == id);
             if (entity == null)
                 return false;
             _cryptoStorage.Remove(entity);

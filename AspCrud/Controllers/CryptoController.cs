@@ -3,9 +3,11 @@ using AspCrud.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AspCrud.Controllers
-{    
+{
+    [Route("[controller]/[action]")]
     public class CryptoController : ControllerBase
     {
         private readonly CryptoService _cryptoService = new CryptoService();
@@ -18,12 +20,12 @@ namespace AspCrud.Controllers
         [HttpGet]
         public IEnumerable<Crypto> GetCrypto()
         {
-            return _cryptoService.GetAllGrypto();
+            return _cryptoService.GetAllCrypto().ToList();
         }
-        [HttpGet("{index}")]
-        public Crypto? GetCrypto(int index)
+        [HttpGet("{id}")]
+        public Crypto? GetCrypto(int id)
         {
-            return _cryptoService.GetGrypto(index);
+            return _cryptoService.GetCrypto(id);
         }
         [HttpPut]
         public bool UpdateCrypto(Crypto crypto)
@@ -36,9 +38,9 @@ namespace AspCrud.Controllers
             return _cryptoService.DeleteCrypto(crypto);
         }
         [HttpDelete]
-        public bool DeleteCrypto(int index)
+        public bool DeleteCrypto(int id)
         {
-            return _cryptoService.DeleteCrypto(index);
+            return _cryptoService.DeleteCrypto(id);
         }
     }
 }

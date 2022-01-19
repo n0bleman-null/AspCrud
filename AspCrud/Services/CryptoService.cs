@@ -8,11 +8,11 @@ namespace AspCrud.Services
     {
         private readonly CryptoRepository _cryptoRepository = new CryptoRepository();
 
-        public Crypto? GetGrypto(int index)
+        public Crypto? GetCrypto(int id)
         {
-            return _cryptoRepository.Get(index);
+            return _cryptoRepository.Get(id);
         }
-        public IEnumerable<Crypto> GetAllGrypto()
+        public IEnumerable<Crypto> GetAllCrypto()
         {
             return _cryptoRepository.Get();
         }
@@ -28,9 +28,9 @@ namespace AspCrud.Services
         {
             return _cryptoRepository.Delete(crypto);
         }
-        public bool DeleteCrypto(int index)
+        public bool DeleteCrypto(int id)
         {
-            return _cryptoRepository.Delete(index);
+            return _cryptoRepository.Delete(id);
         }
     }
 }
