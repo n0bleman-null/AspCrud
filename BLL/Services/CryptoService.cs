@@ -1,12 +1,17 @@
-﻿using AspCrud.Models;
-using AspCrud.Repositories;
+﻿using BLL.Entities;
+using BLL.Repositories;
 using System.Collections.Generic;
 
-namespace AspCrud.Services
+namespace BLL.Services
 {
     public class CryptoService
     {
-        private readonly CryptoRepository _cryptoRepository = new CryptoRepository();
+        private IRepository<Crypto> _cryptoRepository;
+
+        public CryptoService(IRepository<Crypto> repository)
+        {
+            _cryptoRepository = repository;
+        }
 
         public Crypto? GetCrypto(int id)
         {
@@ -27,10 +32,6 @@ namespace AspCrud.Services
         public bool DeleteCrypto(Crypto crypto)
         {
             return _cryptoRepository.Delete(crypto);
-        }
-        public bool DeleteCrypto(int id)
-        {
-            return _cryptoRepository.Delete(id);
         }
     }
 }

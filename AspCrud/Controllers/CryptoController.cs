@@ -1,5 +1,7 @@
-﻿using AspCrud.Models;
-using AspCrud.Services;
+﻿using AspCrud.Requests;
+using AutoMapper;
+using BLL.Entities;
+using BLL.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -10,37 +12,43 @@ namespace AspCrud.Controllers
     [Route("[controller]/[action]")]
     public class CryptoController : ControllerBase
     {
-        private readonly CryptoService _cryptoService = new CryptoService();
+        private CryptoService _cryptoService;
+        private Mapper _mapper;
+
+        public CryptoController(CryptoService service)
+        {
+            _cryptoService = service;
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Crypto, CryptoViewModel>());
+            _mapper = new Mapper(config);
+        }
 
         [HttpPost]
-        public bool AddCrypto(Crypto crypto)
+        public bool AddCrypto([FromBody]Crypto crypto)
         {
             return _cryptoService.AddCrypto(crypto);
         }
         [HttpGet]
-        public IEnumerable<Crypto> GetCrypto()
+        public IEnumerable<CryptoViewModel> GetCrypto()
         {
-            return _cryptoService.GetAllCrypto().ToList();
+            return _cryptoService.GetAllCrypto().Select(crypto => _mapper.Map<Crypto, CryptoViewModel>(crypto)).ToList();
         }
         [HttpGet("{id}")]
-        public Crypto? GetCrypto(int id)
+        public CryptoViewModel? GetCrypto([FromBody] int id)
         {
-            return _cryptoService.GetCrypto(id);
+            var crypto = _cryptoService.GetCrypto(id);
+            if (crypto == null)
+                return null;
+            return _mapper.Map<Crypto, CryptoViewModel>(crypto);
         }
         [HttpPut]
-        public bool UpdateCrypto(Crypto crypto)
+        public bool UpdateCrypto([FromBody] Crypto crypto)
         {
             return _cryptoService.UpdateCrypto(crypto);
         }
         [HttpDelete]
-        public bool DeleteCrypto(Crypto crypto)
+        public bool DeleteCrypto([FromBody] Crypto crypto)
         {
             return _cryptoService.DeleteCrypto(crypto);
-        }
-        [HttpDelete]
-        public bool DeleteCrypto(int id)
-        {
-            return _cryptoService.DeleteCrypto(id);
         }
     }
 }

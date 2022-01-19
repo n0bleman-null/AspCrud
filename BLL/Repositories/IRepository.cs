@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AspCrud.Repositories
+namespace BLL.Repositories
 {
     public interface IRepository<T>
     {
@@ -9,7 +9,6 @@ namespace AspCrud.Repositories
         bool Add(T entity);
         bool Update(T entity);
         bool Delete(T entity);
-        bool Delete(int id);
         
     }
 }

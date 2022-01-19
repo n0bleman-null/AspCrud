@@ -1,8 +1,9 @@
-﻿using AspCrud.Models;
+﻿using BLL.Entities;
+using BLL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AspCrud.Repositories
+namespace DAL.Repositories
 {
     public class CryptoRepository : IRepository<Crypto>
     {
@@ -48,15 +49,6 @@ namespace AspCrud.Repositories
         public bool Delete(Crypto entity)
         {
             if (!_cryptoStorage.Contains(entity))
-                return false;
-            _cryptoStorage.Remove(entity);
-            return true;
-        }
-
-        public bool Delete(int id)
-        {
-            var entity = _cryptoStorage.Find(s => s.Id == id);
-            if (entity == null)
                 return false;
             _cryptoStorage.Remove(entity);
             return true;
