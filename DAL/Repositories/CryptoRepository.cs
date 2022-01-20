@@ -16,12 +16,9 @@ namespace DAL.Repositories
         }
         public List<Crypto> _cryptoStorage = new List<Crypto>();
 
-        public bool Add(Crypto entity)
+        public void Add(Crypto entity)
         {
-            if (_cryptoStorage.Contains(entity) || _cryptoStorage.Find(s => s.Id == entity.Id) != null)
-                return false;
             _cryptoStorage.Add(entity);
-            return true;
         }       
 
         public IEnumerable<Crypto> Get()
@@ -34,24 +31,16 @@ namespace DAL.Repositories
             return _cryptoStorage.FirstOrDefault(s => s.Id == id);
         }
 
-        public bool Update(Crypto entity)
+        public void Update(Crypto entity)
         {
-            if (entity == null)
-                return false;
             var item = _cryptoStorage.Find(s => s.Id == entity.Id);
-            if (item == null)
-                return false;
             item.Name = entity.Name;
             item.Price = entity.Price;
             item.IsToken = entity.IsToken;
-            return true;
         }
-        public bool Delete(Crypto entity)
+        public void Delete(Crypto entity)
         {
-            if (!_cryptoStorage.Contains(entity))
-                return false;
             _cryptoStorage.Remove(entity);
-            return true;
         }
     }
 }

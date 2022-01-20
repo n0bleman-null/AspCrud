@@ -13,42 +13,65 @@ namespace AspCrud.Controllers
     public class CryptoController : ControllerBase
     {
         private CryptoService _cryptoService;
-        private Mapper _mapper;
+        private IMapper _mapper;
 
-        public CryptoController(CryptoService service)
+        public CryptoController(CryptoService service, IMapper mapper)
         {
             _cryptoService = service;
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Crypto, CryptoViewModel>());
-            _mapper = new Mapper(config);
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public bool AddCrypto([FromBody]Crypto crypto)
+        public IActionResult Add([FromBody]Crypto crypto)
         {
-            return _cryptoService.AddCrypto(crypto);
+            try
+            {
+                _cryptoService.AddCrypto(crypto);
+            }
+            catch (System.Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
         [HttpGet]
-        public IEnumerable<CryptoViewModel> GetCrypto()
+        public ActionResult<IEnumerable<CryptoViewModel>> Get()
         {
-            return _cryptoService.GetAllCrypto().Select(crypto => _mapper.Map<Crypto, CryptoViewModel>(crypto)).ToList();
+            return Ok(_cryptoService.GetAllCrypto().Select(crypto => _mapper.Map<Crypto, CryptoViewModel>(crypto)).ToList());
         }
         [HttpGet("{id}")]
-        public CryptoViewModel? GetCrypto([FromBody] int id)
+        public ActionResult<CryptoViewModel> Get([FromBody] int id)
         {
             var crypto = _cryptoService.GetCrypto(id);
             if (crypto == null)
-                return null;
-            return _mapper.Map<Crypto, CryptoViewModel>(crypto);
+                return NotFound();
+            return Ok(_mapper.Map<Crypto, CryptoViewModel>(crypto));
         }
         [HttpPut]
-        public bool UpdateCrypto([FromBody] Crypto crypto)
+        public IActionResult Update([FromBody] Crypto crypto)
         {
-            return _cryptoService.UpdateCrypto(crypto);
+            try
+            {
+                _cryptoService.UpdateCrypto(crypto);
+            }
+            catch (System.Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
         [HttpDelete]
-        public bool DeleteCrypto([FromBody] Crypto crypto)
+        public IActionResult Delete([FromBody] Crypto crypto)
         {
-            return _cryptoService.DeleteCrypto(crypto);
+            try
+            {
+                _cryptoService.DeleteCrypto(crypto);
+            }
+            catch (System.Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
     }
 }

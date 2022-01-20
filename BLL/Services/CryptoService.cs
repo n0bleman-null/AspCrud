@@ -21,17 +21,17 @@ namespace BLL.Services
         {
             return _cryptoRepository.Get();
         }
-        public bool AddCrypto(Crypto crypto)
+        public void AddCrypto(Crypto crypto)
         {
-            return _cryptoRepository.Add(crypto);
+            _cryptoRepository.Add(crypto);
         }
-        public bool UpdateCrypto(Crypto crypto)
+        public void UpdateCrypto(Crypto crypto)
         {
-            return _cryptoRepository.Update(crypto);
+            _cryptoRepository.Update(crypto);
         }
-        public bool DeleteCrypto(Crypto crypto)
+        public void DeleteCrypto(Crypto crypto)
         {
-            return _cryptoRepository.Delete(crypto);
+            _cryptoRepository.Delete(crypto);
         }
     }
 }

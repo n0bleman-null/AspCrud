@@ -9,16 +9,19 @@ using BLL.Repositories;
 using BLL.Entities;
 using BLL.Services;
 using Microsoft.EntityFrameworkCore;
+using AspCrud.Requests;
+using AutoMapper;
 
 namespace AspCrud
 {
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
-        {           
+        {
             services.AddDbContext<CryptoContext>(options => options.UseSqlServer("name=ConnectionStrings:CryptoConnection"));
             services.AddScoped<IRepository<Crypto>, CryptoDbRepository>();
             services.AddScoped<CryptoService>();
+            services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddControllers();
         }
 

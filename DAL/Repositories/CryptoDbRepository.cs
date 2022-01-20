@@ -16,13 +16,10 @@ namespace DAL.Repositories
             _cryptoContext = cryptoContext;
         }
 
-        public bool Add(Crypto entity)
+        public void Add(Crypto entity)
         {
-            if (_cryptoContext.Cryptos.Contains(entity) || _cryptoContext.Cryptos.FirstOrDefault(s => s.Id == entity.Id) != null)
-                return false;
             _cryptoContext.Cryptos.Add(new Crypto { Name = entity.Name, Price = entity.Price, IsToken = entity.IsToken});
             _cryptoContext.SaveChanges();
-            return true;
         }
 
         public IEnumerable<Crypto> Get()
@@ -35,28 +32,15 @@ namespace DAL.Repositories
             return _cryptoContext.Cryptos.FirstOrDefault(s => s.Id == id);
         }
 
-        public bool Update(Crypto entity)
+        public void Update(Crypto entity)
         {
-            if (entity == null)
-                return false;
-            var item = _cryptoContext.Cryptos.FirstOrDefault(s => s.Id == entity.Id);
-            if (item == null)
-                return false;
-            item.Name = entity.Name;
-            item.Price = entity.Price;
-            item.IsToken = entity.IsToken;
-            _cryptoContext.Cryptos.Update(item);
+            _cryptoContext.Cryptos.Update(entity);
             _cryptoContext.SaveChanges();
-            return true;
         }
-        public bool Delete(Crypto entity)
+        public void Delete(Crypto entity)
         {
-            var item = _cryptoContext.Cryptos.FirstOrDefault(s => s.Id == entity.Id);
-            if (item == null)
-                return false;
-            _cryptoContext.Cryptos.Remove(item);
+            _cryptoContext.Cryptos.Remove(entity);
             _cryptoContext.SaveChanges();
-            return true;
         }
     }
 }

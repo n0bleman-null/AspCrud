@@ -6,9 +6,8 @@ namespace BLL.Repositories
     {
         IEnumerable<T> Get();
         T? Get(int id);
-        bool Add(T entity);
-        bool Update(T entity);
-        bool Delete(T entity);
-        
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(T entity);        
     }
 }
