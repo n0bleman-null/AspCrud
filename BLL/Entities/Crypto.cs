@@ -1,10 +1,11 @@
 ﻿using System;
 
-namespace AspCrud.Models
+namespace BLL.Entities
 {
     public class Crypto : IEquatable<Crypto>
     {
-        public uint Id { get; set; } = 0;
+
+        public uint Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
         public bool IsToken { get; set; }
@@ -18,6 +19,5 @@ namespace AspCrud.Models
             }
             return false;
         }
-        public override string ToString() => String.Join(" ", Id, Name);
     }
 }
