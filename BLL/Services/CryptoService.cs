@@ -21,9 +21,9 @@ namespace BLL.Services
         //{
         //    return _cryptoRepository.Get(id);
         //}
-        public async Task<IQueryable<Crypto>> GetAsync()
+        public Task<IQueryable<Crypto>> GetAsync()
         {
-            return await _cryptoFinder.AsQueryableAsync();
+            return Task.Run(() => _cryptoFinder.AsQueryable());
         }
         public async Task AddAsync(Crypto crypto)
         {
@@ -32,12 +32,12 @@ namespace BLL.Services
         }
         public async Task UpdateAsync(Crypto crypto)
         {
-            await _cryptoRepository.UpdateAsync(crypto);
+            _cryptoRepository.Update(crypto);
             await _unitOfWork.SaveAsync();
         }
         public async Task DeleteAsync(Crypto crypto)
         {
-            await _cryptoRepository.DeleteAsync(crypto);
+            _cryptoRepository.Delete(crypto);
             await _unitOfWork.SaveAsync();
         }
     }

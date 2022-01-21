@@ -8,6 +8,6 @@ namespace BLL.Repositories
 {
     public interface IFinder<T> where T : class
     {
-        Task<IQueryable<T>> AsQueryableAsync();
+        IQueryable<T> AsQueryable();
     }
 }

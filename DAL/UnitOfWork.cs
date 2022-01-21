@@ -16,9 +16,9 @@ namespace DAL
         {
             _cryptoContext = cryptoContext;
         }
-        public async Task SaveAsync()
+        public Task<int> SaveAsync()
         {
-            await _cryptoContext.SaveChangesAsync();
+            return _cryptoContext.SaveChangesAsync();
         }
     }
 }

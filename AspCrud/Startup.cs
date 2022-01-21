@@ -41,7 +41,6 @@ namespace AspCrud
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
