@@ -4,34 +4,41 @@ using System.Collections.Generic;
 
 namespace BLL.Services
 {
-    public class CryptoService
+    public class CryptoService : ICryptoService
     {
-        private IRepository<Crypto> _cryptoRepository;
+        private readonly IRepository<Crypto> _cryptoRepository;
+        private readonly IFinder<Crypto> _cryptoFinder;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CryptoService(IRepository<Crypto> repository)
+        public CryptoService(IRepository<Crypto> repository, IFinder<Crypto> finder, IUnitOfWork unitOfWork)
         {
             _cryptoRepository = repository;
+            _cryptoFinder = finder;
+            _unitOfWork = unitOfWork;
         }
 
-        public Crypto? GetCrypto(int id)
+        //public Crypto? Get(int id)
+        //{
+        //    return _cryptoRepository.Get(id);
+        //}
+        public async Task<IQueryable<Crypto>> GetAsync()
         {
-            return _cryptoRepository.Get(id);
+            return await _cryptoFinder.AsQueryableAsync();
         }
-        public IEnumerable<Crypto> GetAllCrypto()
+        public async Task AddAsync(Crypto crypto)
         {
-            return _cryptoRepository.Get();
+            await _cryptoRepository.AddAsync(crypto);
+            await _unitOfWork.SaveAsync();
         }
-        public void AddCrypto(Crypto crypto)
+        public async Task UpdateAsync(Crypto crypto)
         {
-            _cryptoRepository.Add(crypto);
+            await _cryptoRepository.UpdateAsync(crypto);
+            await _unitOfWork.SaveAsync();
         }
-        public void UpdateCrypto(Crypto crypto)
+        public async Task DeleteAsync(Crypto crypto)
         {
-            _cryptoRepository.Update(crypto);
-        }
-        public void DeleteCrypto(Crypto crypto)
-        {
-            _cryptoRepository.Delete(crypto);
+            await _cryptoRepository.DeleteAsync(crypto);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

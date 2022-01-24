@@ -1,73 +1,69 @@
 ﻿using AspCrud.Requests;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using BLL.Entities;
 using BLL.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AspCrud.Controllers
 {
     [Route("[controller]/[action]")]
     public class CryptoController : ControllerBase
     {
-        private CryptoService _cryptoService;
+        private ICryptoService _cryptoService;
         private IMapper _mapper;
 
-        public CryptoController(CryptoService service, IMapper mapper)
+        public CryptoController(ICryptoService service, IMapper mapper)
         {
             _cryptoService = service;
             _mapper = mapper;
         }
-
+        
+        [HttpGet] // maybe return IEnumerable?
+        public async Task<ActionResult<IQueryable<CryptoViewModel>>> Get()
+        {
+            return Ok(_mapper.ProjectTo<CryptoViewModel>(await _cryptoService.GetAsync()));
+        }
         [HttpPost]
-        public IActionResult Add([FromBody]Crypto crypto)
+        public async Task<IActionResult> AddAsync([FromBody] Crypto crypto)
         {
             try
             {
-                _cryptoService.AddCrypto(crypto);
+                await _cryptoService.AddAsync(crypto);
             }
-            catch (System.Exception)
+            catch (DbUpdateException)
             {
                 return BadRequest();
             }
             return Ok();
         }
-        [HttpGet]
-        public ActionResult<IEnumerable<CryptoViewModel>> Get()
-        {
-            return Ok(_cryptoService.GetAllCrypto().Select(crypto => _mapper.Map<Crypto, CryptoViewModel>(crypto)).ToList());
-        }
-        [HttpGet("{id}")]
-        public ActionResult<CryptoViewModel> Get([FromBody] int id)
-        {
-            var crypto = _cryptoService.GetCrypto(id);
-            if (crypto == null)
-                return NotFound();
-            return Ok(_mapper.Map<Crypto, CryptoViewModel>(crypto));
-        }
         [HttpPut]
-        public IActionResult Update([FromBody] Crypto crypto)
+        public async Task<IActionResult> UpdateAsync([FromBody] Crypto crypto)
         {
             try
             {
-                _cryptoService.UpdateCrypto(crypto);
+                await _cryptoService.UpdateAsync(crypto);
             }
-            catch (System.Exception)
+            catch (DbUpdateConcurrencyException)
             {
                 return BadRequest();
             }
             return Ok();
         }
         [HttpDelete]
-        public IActionResult Delete([FromBody] Crypto crypto)
+        public async Task<IActionResult> DeleteAsync([FromBody] Crypto crypto)
         {
             try
             {
-                _cryptoService.DeleteCrypto(crypto);
+                await _cryptoService.DeleteAsync(crypto);
             }
-            catch (System.Exception)
+            catch (DbUpdateConcurrencyException)
             {
                 return BadRequest();
             }

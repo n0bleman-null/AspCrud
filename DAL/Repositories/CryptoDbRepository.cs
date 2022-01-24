@@ -15,32 +15,17 @@ namespace DAL.Repositories
         {
             _cryptoContext = cryptoContext;
         }
-
-        public void Add(Crypto entity)
+        public async Task AddAsync(Crypto entity)
         {
-            _cryptoContext.Cryptos.Add(new Crypto { Name = entity.Name, Price = entity.Price, IsToken = entity.IsToken});
-            _cryptoContext.SaveChanges();
+            await _cryptoContext.Cryptos.AddAsync(new Crypto { Name = entity.Name, Price = entity.Price, IsToken = entity.IsToken});
         }
-
-        public IEnumerable<Crypto> Get()
+        public async Task UpdateAsync(Crypto entity)
         {
-            return _cryptoContext.Cryptos.AsEnumerable().OrderBy(s => s.Name);
+            await Task.Run(() => _cryptoContext.Cryptos.Update(entity));
         }
-
-        public Crypto? Get(int id)
+        public async Task DeleteAsync(Crypto entity)
         {
-            return _cryptoContext.Cryptos.FirstOrDefault(s => s.Id == id);
-        }
-
-        public void Update(Crypto entity)
-        {
-            _cryptoContext.Cryptos.Update(entity);
-            _cryptoContext.SaveChanges();
-        }
-        public void Delete(Crypto entity)
-        {
-            _cryptoContext.Cryptos.Remove(entity);
-            _cryptoContext.SaveChanges();
+           await Task.Run(() => _cryptoContext.Cryptos.Remove(entity));
         }
     }
 }
