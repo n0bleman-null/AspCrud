@@ -25,13 +25,29 @@ namespace AspCrud.Controllers
             _mapper = mapper;
         }
         
-        [HttpGet] // maybe return IEnumerable?
-        public async Task<ActionResult<IQueryable<CryptoViewModel>>> Get()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CryptoViewModel>>> Get()
         {
-            return Ok(_mapper.ProjectTo<CryptoViewModel>(await _cryptoService.GetAsync()));
+            return Ok((await _cryptoService.GetAllAsync()).Select(c => _mapper.Map<CryptoViewModel>(c)));
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CryptoViewModel>> GetById(int id)
+        {
+            var item = await _cryptoService.GetByIdAsync(id);
+            if (item == null)
+                return NotFound();
+            return Ok(item);
+        }
+        [HttpGet("{name}")]
+        public async Task<ActionResult<CryptoViewModel>> GetByName(string name)
+        {
+            var item = await _cryptoService.GetByNameAsync(name);
+            if (item == null)
+                return NotFound();
+            return Ok(item);
         }
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] Crypto crypto)
+        public async Task<IActionResult> Add([FromBody] Crypto crypto)
         {
             try
             {
@@ -44,7 +60,7 @@ namespace AspCrud.Controllers
             return Ok();
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] Crypto crypto)
+        public async Task<IActionResult> Update([FromBody] Crypto crypto)
         {
             try
             {
@@ -57,7 +73,7 @@ namespace AspCrud.Controllers
             return Ok();
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteAsync([FromBody] Crypto crypto)
+        public async Task<IActionResult> Delete([FromBody] Crypto crypto)
         {
             try
             {

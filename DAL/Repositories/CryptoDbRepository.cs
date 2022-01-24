@@ -17,7 +17,7 @@ namespace DAL.Repositories
         }
         public Task AddAsync(Crypto entity)
         {
-            return _cryptoContext.Cryptos.AddAsync(new Crypto { Name = entity.Name, Price = entity.Price, IsToken = entity.IsToken}).AsTask();
+            return _cryptoContext.Cryptos.AddAsync(new Crypto {Name = entity.Name, Price = entity.Price, IsToken = entity.IsToken}).AsTask();
         }
         public void Update(Crypto entity)
         {

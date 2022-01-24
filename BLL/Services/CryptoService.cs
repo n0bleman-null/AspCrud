@@ -7,38 +7,43 @@ namespace BLL.Services
     public class CryptoService : ICryptoService
     {
         private readonly IRepository<Crypto> _cryptoRepository;
-        private readonly IFinder<Crypto> _cryptoFinder;
+        private readonly ICryptoFinder _cryptoFinder;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CryptoService(IRepository<Crypto> repository, IFinder<Crypto> finder, IUnitOfWork unitOfWork)
+        public CryptoService(IRepository<Crypto> repository, ICryptoFinder finder, IUnitOfWork unitOfWork)
         {
             _cryptoRepository = repository;
             _cryptoFinder = finder;
             _unitOfWork = unitOfWork;
         }
-
-        //public Crypto? Get(int id)
-        //{
-        //    return _cryptoRepository.Get(id);
-        //}
-        public Task<IQueryable<Crypto>> GetAsync()
+        public Task<Crypto?> GetByIdAsync(int id)
         {
-            return Task.Run(() => _cryptoFinder.AsQueryable());
+            return _cryptoFinder.GetById(id);
+        }
+
+        public Task<Crypto?> GetByNameAsync(string name)
+        {
+            return _cryptoFinder.GetByName(name);
+        }
+
+        public Task<List<Crypto>> GetAllAsync()
+        {
+            return _cryptoFinder.GetAll();
         }
         public async Task AddAsync(Crypto crypto)
         {
             await _cryptoRepository.AddAsync(crypto);
             await _unitOfWork.SaveAsync();
         }
-        public async Task UpdateAsync(Crypto crypto)
+        public Task UpdateAsync(Crypto crypto)
         {
             _cryptoRepository.Update(crypto);
-            await _unitOfWork.SaveAsync();
+            return _unitOfWork.SaveAsync();
         }
-        public async Task DeleteAsync(Crypto crypto)
+        public Task DeleteAsync(Crypto crypto)
         {
             _cryptoRepository.Delete(crypto);
-            await _unitOfWork.SaveAsync();
+            return _unitOfWork.SaveAsync();
         }
     }
 }

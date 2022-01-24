@@ -27,7 +27,7 @@ namespace AspCrud
             // need I inject database congig?
             services.AddDbContext<CryptoContext>(options => options.UseSqlServer(_configuration["ConnectionStrings:CryptoConnection"]));
             services.AddScoped<DbSet<Crypto>>(provider => provider.GetRequiredService<CryptoContext>().Cryptos);
-            services.AddScoped<IFinder<Crypto>, Finder<Crypto>>();
+            services.AddScoped<ICryptoFinder, CryptoFinder>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRepository<Crypto>, CryptoDbRepository>();
             services.AddScoped<ICryptoService, CryptoService>();
