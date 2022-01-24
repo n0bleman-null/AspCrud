@@ -8,6 +8,6 @@ namespace BLL.Repositories
 {
     public interface IUnitOfWork
     {
-        public Task SaveAsync();
+        Task<int> SaveAsync();
     }
 }

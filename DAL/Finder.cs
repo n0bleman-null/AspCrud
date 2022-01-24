@@ -15,9 +15,9 @@ namespace DAL
         {
             _dbset = dbset;
         }
-        public async Task<IQueryable<T>> AsQueryableAsync()
+        public IQueryable<T> AsQueryable()
         {
-            return await Task.Run(() => _dbset.AsQueryable());
+            return _dbset.AsQueryable();
         }
     }
 }

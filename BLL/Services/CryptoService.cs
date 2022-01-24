@@ -1,44 +1,50 @@
 ﻿using BLL.Entities;
 using BLL.Repositories;
+using StackExchange.Redis.Extensions.Core.Abstractions;
 using System.Collections.Generic;
 
 namespace BLL.Services
 {
     public class CryptoService : ICryptoService
     {
-        private readonly IRepository<Crypto> _cryptoRepository;
-        private readonly IFinder<Crypto> _cryptoFinder;
+        private readonly ICryptoRepository _cryptoRepository;
+        private readonly ICryptoFinder _cryptoFinder;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CryptoService(IRepository<Crypto> repository, IFinder<Crypto> finder, IUnitOfWork unitOfWork)
+        public CryptoService(ICryptoRepository repository, ICryptoFinder finder, IUnitOfWork unitOfWork)
         {
             _cryptoRepository = repository;
             _cryptoFinder = finder;
             _unitOfWork = unitOfWork;
         }
-
-        //public Crypto? Get(int id)
-        //{
-        //    return _cryptoRepository.Get(id);
-        //}
-        public async Task<IQueryable<Crypto>> GetAsync()
+        public async Task<Crypto?> GetByIdAsync(int id)
         {
-            return await _cryptoFinder.AsQueryableAsync();
+            return await _cryptoFinder.GetById(id);
+        }
+
+        public Task<Crypto?> GetByNameAsync(string name)
+        {
+            return _cryptoFinder.GetByName(name);
+        }
+
+        public async Task<List<Crypto>> GetAllAsync()
+        {
+            return await _cryptoFinder.GetAll();
         }
         public async Task AddAsync(Crypto crypto)
         {
             await _cryptoRepository.AddAsync(crypto);
             await _unitOfWork.SaveAsync();
         }
-        public async Task UpdateAsync(Crypto crypto)
+        public Task UpdateAsync(Crypto crypto)
         {
-            await _cryptoRepository.UpdateAsync(crypto);
-            await _unitOfWork.SaveAsync();
+            _cryptoRepository.Update(crypto);
+            return _unitOfWork.SaveAsync();
         }
-        public async Task DeleteAsync(Crypto crypto)
+        public Task DeleteAsync(Crypto crypto)
         {
-            await _cryptoRepository.DeleteAsync(crypto);
-            await _unitOfWork.SaveAsync();
+            _cryptoRepository.Delete(crypto);
+            return _unitOfWork.SaveAsync();
         }
     }
 }
