@@ -1,24 +1,25 @@
 ﻿using BLL.Entities;
 using BLL.Repositories;
+using StackExchange.Redis.Extensions.Core.Abstractions;
 using System.Collections.Generic;
 
 namespace BLL.Services
 {
     public class CryptoService : ICryptoService
     {
-        private readonly IRepository<Crypto> _cryptoRepository;
+        private readonly ICryptoRepository _cryptoRepository;
         private readonly ICryptoFinder _cryptoFinder;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CryptoService(IRepository<Crypto> repository, ICryptoFinder finder, IUnitOfWork unitOfWork)
+        public CryptoService(ICryptoRepository repository, ICryptoFinder finder, IUnitOfWork unitOfWork)
         {
             _cryptoRepository = repository;
             _cryptoFinder = finder;
             _unitOfWork = unitOfWork;
         }
-        public Task<Crypto?> GetByIdAsync(int id)
+        public async Task<Crypto?> GetByIdAsync(int id)
         {
-            return _cryptoFinder.GetById(id);
+            return await _cryptoFinder.GetById(id);
         }
 
         public Task<Crypto?> GetByNameAsync(string name)
@@ -26,9 +27,9 @@ namespace BLL.Services
             return _cryptoFinder.GetByName(name);
         }
 
-        public Task<List<Crypto>> GetAllAsync()
+        public async Task<List<Crypto>> GetAllAsync()
         {
-            return _cryptoFinder.GetAll();
+            return await _cryptoFinder.GetAll();
         }
         public async Task AddAsync(Crypto crypto)
         {

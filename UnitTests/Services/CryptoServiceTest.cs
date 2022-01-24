@@ -15,7 +15,7 @@ namespace UnitTests.Services
     public class CryptoServiceTest
     {
         private ICryptoService _cryptoService;
-        private Mock<IRepository<Crypto>> _mockRepository;
+        private Mock<ICryptoRepository> _mockRepository;
         private Mock<IUnitOfWork> _mockUnitOfWork;
         private Mock<ICryptoFinder> _mockFinder;
 
@@ -28,7 +28,7 @@ namespace UnitTests.Services
         [SetUp]
         public void SetUp()
         {
-            _mockRepository = new Mock<IRepository<Crypto>>();
+            _mockRepository = new Mock<ICryptoRepository>();
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockFinder = new Mock<ICryptoFinder>();
             _mockFinder.Setup(m => m.GetAll()).Returns(() => Task.Run(() => new List<Crypto>(_cryptoList)));

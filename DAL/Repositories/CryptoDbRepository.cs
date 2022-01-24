@@ -8,22 +8,25 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class CryptoDbRepository : IRepository<Crypto>
+    public abstract class CryptoDbRepository : ICryptoRepository // can make abstract
     {
         private readonly CryptoContext _cryptoContext;
+
+        public abstract event CryptoEventHandler? CryptoChanged;
+
         public CryptoDbRepository(CryptoContext cryptoContext)
         {
             _cryptoContext = cryptoContext;
         }
-        public Task AddAsync(Crypto entity)
+        public virtual Task AddAsync(Crypto entity)
         {
             return _cryptoContext.Cryptos.AddAsync(new Crypto {Name = entity.Name, Price = entity.Price, IsToken = entity.IsToken}).AsTask();
         }
-        public void Update(Crypto entity)
+        public virtual void Update(Crypto entity)
         {
             _cryptoContext.Cryptos.Update(entity);
         }
-        public void Delete(Crypto entity)
+        public virtual void Delete(Crypto entity)
         {
             _cryptoContext.Cryptos.Remove(entity);
         }

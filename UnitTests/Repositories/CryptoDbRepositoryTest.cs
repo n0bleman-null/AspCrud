@@ -1,9 +1,16 @@
 ﻿using BLL.Entities;
 using BLL.Repositories;
 using DAL;
+using DAL.Finders;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
+using StackExchange.Redis;
+using StackExchange.Redis.Extensions.Core.Abstractions;
+using StackExchange.Redis.Extensions.Core.Configuration;
+using StackExchange.Redis.Extensions.Core.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,9 +35,15 @@ namespace UnitTests.Repositories
             var ctx = new CryptoContext(options);
             ctx.Database.EnsureDeleted();
             ctx.Database.EnsureCreated();
-            _repository = new CryptoDbRepository(ctx);
+            _repository = new CryptoDbRedisRepository(ctx);
             _unitOfWork = new UnitOfWork(ctx);
-            _finder = new CryptoFinder(ctx.Cryptos);
+
+            var mockRedisClient = new Mock<IRedisClient>();
+            var mockRedisDatabase = new Mock<IRedisDatabase>();
+            mockRedisDatabase.Setup(m => m.ExistsAsync(It.IsAny<string>(), It.IsAny<CommandFlags>()))
+                .Returns(() => Task.Run(() => false));
+            mockRedisClient.Setup(m => m.GetDefaultDatabase()).Returns(() => mockRedisDatabase.Object);
+            _finder = new CryptoRedisFinder(ctx.Cryptos, mockRedisClient.Object);
         }
 
         [Test]

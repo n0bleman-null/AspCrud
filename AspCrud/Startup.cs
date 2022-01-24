@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using AspCrud.Requests;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using StackExchange.Redis.Extensions.Core.Configuration;
+using StackExchange.Redis.Extensions.Newtonsoft;
+using DAL.Finders;
 
 namespace AspCrud
 {
@@ -24,12 +27,12 @@ namespace AspCrud
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            // need I inject database congig?
+            services.AddStackExchangeRedisExtensions<NewtonsoftSerializer>(_configuration.GetSection("Redis").Get<RedisConfiguration>());
             services.AddDbContext<CryptoContext>(options => options.UseSqlServer(_configuration["ConnectionStrings:CryptoConnection"]));
             services.AddScoped<DbSet<Crypto>>(provider => provider.GetRequiredService<CryptoContext>().Cryptos);
-            services.AddScoped<ICryptoFinder, CryptoFinder>();
+            services.AddScoped<ICryptoFinder, CryptoRedisFinder>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IRepository<Crypto>, CryptoDbRepository>();
+            services.AddScoped<ICryptoRepository, CryptoDbRedisRepository>();
             services.AddScoped<ICryptoService, CryptoService>();
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddControllers();

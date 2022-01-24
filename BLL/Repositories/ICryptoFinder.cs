@@ -12,5 +12,6 @@ namespace BLL.Repositories
         Task<List<Crypto>> GetAll();
         Task<Crypto?> GetByName(string name);
         Task<Crypto?> GetById(int id);
+        Task OnCryptoChanged(ICryptoRepository sender, CryptoEventArgs e);
     }
 }
